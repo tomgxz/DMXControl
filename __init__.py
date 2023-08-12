@@ -5,18 +5,20 @@ from mss import mss
 from PIL import Image,ImageEnhance
 from serial import SerialException
 
+import utils.settings as settings
 class DMXControl():
     
     def __init__(self):
-        self.FORMAT = [0,1,2]
-        self.PIXELCOUNT = 16
+
+        self.FORMAT = settings.COLOR_FORMAT
+        self.PIXELCOUNT = settings.PIXEL_COUNT
+        self.FADEAMT = settings.FADE_FACTOR
+
+        self.DIMMED = settings.DIMMED
+        self.MONO = settings.COLOR_MONO
+
         self.DMXVALUES = len(self.FORMAT)*self.PIXELCOUNT
-        self.FADEAMT = 15
-
         self.BLACK = np.array([[0 for __ in range(len(self.FORMAT))] for _ in range(self.PIXELCOUNT)])
-
-        self.DIMMED = 1
-        self.MONO = False
 
         self.previouscontent = self.BLACK
 
