@@ -38,6 +38,25 @@ class DMXInterface():
             raise InterfaceFailedConnectionException()
            
     def __send_universe(self,data:list):
+        try: assert type(data) == list
+        except AssertionError: 
+            raise InterfaceInvalidArgumentException(
+                "Universe data must be contained in a list structure.")
+        
+        try: assert data not in [[],None]
+        except AssertionError:
+            raise InterfaceInvalidArgumentException(
+                "Universe must contain data")
+        
+        try: assert len(data) <= 512
+        except AssertionError:
+            raise InterfaceInvalidArgumentException(
+                "Universe must not exceed 512 entries")
+
+        try: assert self.connected == True
+        except AssertionError:
+            raise InterfaceNotConnectedException()
+
         for datum in enumerate(data):
             self.interface.set_data(datum[0],datum[1],auto_send=False)
 
@@ -45,5 +64,29 @@ class DMXInterface():
         except SerialException: raise InterfaceDisconnectedException()
 
     def __send_channel(self,channel_address:int,channel_content:int,auto_send=True):
+        try: assert type(channel_address) == int
+        except AssertionError:
+            raise InterfaceInvalidArgumentException(
+                "Channel address must be an integer")
+        
+        try: assert type(channel_content) == int
+        except AssertionError:
+            raise InterfaceInvalidArgumentException(
+                "Channel content must be an integer")
+        
+        try: assert channel_address > 0 and channel_address <= 512
+        except AssertionError:
+            raise InterfaceInvalidArgumentException(
+                "Channel address must be between 1 and 512")
+        
+        try: assert channel_content >=0 and channel_content <= 255
+        except AssertionError:
+            raise InterfaceInvalidArgumentException(
+                "Channel content must be between 0 and 255")
+
+        try: assert self.connected == True
+        except AssertionError:
+            raise InterfaceNotConnectedException()
+
         try: self.interface.set_data(channel_address,channel_content,auto_send=auto_send)
         except SerialException as exec: raise InterfaceDisconnectedException()
