@@ -1,3 +1,7 @@
+if __name__ == "__main__":
+    from exceptions import ModuleRunError
+    raise ModuleRunError()
+
 from dmx import DMX
 from serial import SerialException
 import time
