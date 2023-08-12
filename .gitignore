@@ -1,6 +1,7 @@
 .replit
 replit.nix
 .vscode
+session.txt
 
 ### Django ###
 *.log
