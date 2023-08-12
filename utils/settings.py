@@ -1,3 +1,7 @@
+if __name__ == "__main__":
+    from exceptions import ModuleRunError
+    raise ModuleRunError()
+
 # The amount of pixels to output to
 PIXEL_COUNT = 16
 
