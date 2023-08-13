@@ -21,8 +21,11 @@ class DMXInterface():
         self.__connection_timeout = settings.INTERFACE_CONNECTION_TIMEOUT
         self.__connection_attempts = 0
         self.__connection_delay = settings.INTERFACE_CONNECTION_DELAY
+
+        self.__connection_attempt_validation = lambda: self.__connection_timeout > self.__connection_attempts
+        if self.__connection_timeout == -1: self.__connection_attempt_validation = lambda: True
         
-        while not self.connected and self.__connection_timeout > self.__connection_attempts:
+        while not self.connected and self.__connection_attempt_validation():
 
             if self.__attempt_connection():
                 self.connected = True
