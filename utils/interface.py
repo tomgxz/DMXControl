@@ -51,8 +51,7 @@ class DMXInterface():
      
     def connect(self):
         try: self.interface = DMX(num_of_channels=512)
-        except Exception as exec:
-            print(type(exec))
+        except ConnectionError as exec:
             raise InterfaceFailedConnectionException()
            
     def __send_universe(self,data:list):
