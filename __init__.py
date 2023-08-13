@@ -6,9 +6,11 @@ from PIL import Image,ImageEnhance
 from serial import SerialException
 
 import utils.settings as settings
+from utils.logger import initialize_logger
 class DMXControl():
     
     def __init__(self):
+        self.logger = initialize_logger(settings.LOGGER_SESSION_FILE,settings.LOGGER_LOG_FILE)
 
         self.FORMAT = settings.COLOR_FORMAT
         self.PIXELCOUNT = settings.PIXEL_COUNT
