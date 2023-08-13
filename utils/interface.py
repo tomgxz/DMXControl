@@ -4,14 +4,18 @@ if __name__ == "__main__":
 
 from dmx import DMX
 from serial import SerialException
+from datetime import timedelta as datetime_timedelta
+from humanize import naturaldelta as humanize_naturaldelta
 import time
 
-from utils.exceptions import InterfaceFailedConnectionException,InterfaceInvalidArgumentException,InterfaceNotConnectedException,InterfaceDisconnectedException
 import utils.settings as settings
+from utils.exceptions import InterfaceFailedConnectionException,InterfaceInvalidArgumentException,InterfaceNotConnectedException,InterfaceDisconnectedException,InterfaceAbortConnectionException
+from utils.logger import Logger as DMXLogger
 
 class DMXInterface():
     
-    def __init__(self):
+    def __init__(self,logger:DMXLogger):
+        assert type(logger) == DMXLogger
 
         self.connected = False
         self.__connection_timeout = settings.INTERFACE_CONNECTION_TIMEOUT
@@ -26,6 +30,13 @@ class DMXInterface():
 
             else:
                 self.__connection_attempts += 1
+
+                if not self.__connection_attempt_validation():
+                    logger.exception(f"Could not connect to RS-485 DMX Interface after {self.__connection_attempts} attempts, aborting...")
+                    raise InterfaceAbortConnectionException()
+                else:
+                    logger.warning(f"Could not connect to RS-485 DMX Interface, retrying in {humanize_naturaldelta(datetime_timedelta(milliseconds=self.__connection_delay))}... ")
+
                 time.sleep(self.__connection_delay/1000)
 
     def __attempt_connection(self):
