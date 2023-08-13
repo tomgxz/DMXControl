@@ -30,3 +30,27 @@ class LoggerFileNotFoundError(LoggerException):
 
         message = f"Logging {file} file not found at URL: {url}"
         super().__init__(message)
+
+class InterfaceException(Exception):
+    def __init__(self,message):
+        super().__init__(message)
+
+class InterfaceFailedConnectionException(InterfaceException):
+    def __init__(self):
+        super().__init__(f"Could not connect to RS-485 DMX Interface.")
+
+class InterfaceAbortConnectionException(InterfaceException):
+    def __init__(self):
+        super().__init__(f"Could not connect to RS-485 DMX Interface.")
+
+class InterfaceDisconnectedException(InterfaceException):
+    def __init__(self):
+        super().__init__(f"RS-485 DMX Interface disconnected.")
+
+class InterfaceNotConnectedException(InterfaceException):
+    def __init__(self):
+        super().__init__(f"Interface must be connected to send data.")
+
+class InterfaceInvalidArgumentException(InterfaceException):
+    def __init__(self, message):
+        super().__init__(f"Invalid argument: {message}")
