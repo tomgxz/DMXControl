@@ -22,3 +22,7 @@ INTERFACE_CONNECTION_DELAY = 5000
 
 # The amount of attempts at connecting to the interface (-1 to continue until connected)
 INTERFACE_CONNECTION_TIMEOUT = -1
+
+# Default file locations for the logger
+LOGGER_SESSION_FILE = "data/session.txt"
+LOGGER_LOG_FILE =  "data/log/latest.log"
