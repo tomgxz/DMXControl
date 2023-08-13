@@ -156,3 +156,72 @@ class Logger():
             Any other keyword arguments to be passed to the logger
         """
         self.logger.exception(msg,*a,*k)
+
+def initialize_logger(sessionfile,logfile):
+    """
+    Initialises the logger and resets the log and session file
+
+    :returns: The Logger object
+    :rtype: Logger
+    """
+
+    commands=[] # used to store log commands before the log has been generated, so that they can be appended
+
+    if os.path.exists(sessionfile) and os.path.exists(logfile): # if both files exist, session.txt and latest.log
+        with open(sessionfile,"r") as f:
+            lines=f.read()
+            if lines == "": # if there are no lines in the file
+                commands.append(lambda:logger.warning("Session file is empty"))
+                previousSessionData={}
+            else:
+                previousSessionData={line.split(":")[0]:line.split(":")[1] for line in [x.strip("\n") for x in lines.split("\n")]}
+
+        open(sessionfile,"w").close() # clear file
+
+        logFileInt=1
+        logFileName=None
+        try:
+            logFileName=f"data/log/{previousSessionData['datecreated']}-%.log"
+        except KeyError as e: # no attribute found in the session data
+            commands.append(lambda:logger.warning("No date created attribute in session file - previous log file will be deleted"))
+        else:
+            while True:
+                if os.path.exists(logFileName.replace("%",str(logFileInt))):
+                    logFileInt+=1
+                else:
+                    break
+
+            with open(logfile,"r") as f1:
+                with open(logFileName.replace("%",str(logFileInt)),"w") as f2:
+                    f2.write(f1.read())
+
+        open(logfile,"w").close() # clear file
+
+    elif os.path.exists(sessionfile) and not(os.path.exists(logfile)): # if latest.log doesnt exist
+        commands.append(lambda:logger.warning("Previous log file does not exist"))
+        if not os.path.exists("data/log/"):
+            os.makedirs("data/log/")
+        open(logfile,"w").close()
+
+    elif (not os.path.exists(sessionfile)) and (not os.path.exists(logfile)): # if neither exists
+        commands.append(lambda:logger.warning("Previous log file does not exist"))
+        commands.append(lambda:logger.warning("Session file does not exist"))
+
+        # clear both files
+        open(logfile,"w").close()
+        open(sessionfile,"w").close()
+
+    else: # anything else
+        commands.append(lambda:logger.warning("Session file does not exist"))
+
+        # clear both files
+        open(logfile,"w").close()
+        open(sessionfile,"w").close()
+
+    logger=Logger(sessionFile=sessionfile,logFile=logfile) # generate the logger
+
+    for command in commands: command()
+
+    logger.info("Logging initialised")
+
+    return logger
