@@ -3,6 +3,8 @@ replit.nix
 .vscode
 session.txt
 
+Qt
+
 ### Django ###
 *.log
 *.pot
