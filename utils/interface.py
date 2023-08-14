@@ -17,6 +17,8 @@ class DMXInterface():
     def __init__(self,logger:DMXLogger):
         assert type(logger) == DMXLogger
 
+        self.logger = logger
+
         self.connected = False
         self.__connection_timeout = settings.INTERFACE_CONNECTION_TIMEOUT
         self.__connection_attempts = 0
@@ -31,14 +33,16 @@ class DMXInterface():
                 self.connected = True
                 self.__connection_attempts = 0
 
+                self.logger.info("Connected to RS-485 DMX Interface.")
+
             else:
                 self.__connection_attempts += 1
 
                 if not self.__connection_attempt_validation():
-                    logger.exception(f"Could not connect to RS-485 DMX Interface after {self.__connection_attempts} attempts, aborting...")
-                    raise InterfaceAbortConnectionException()
+                    self.logger.exception(
+                        InterfaceAbortConnectionException(f"Could not connect to RS-485 DMX Interface after {self.__connection_attempts} attempts, aborting..."))
                 else:
-                    logger.warning(f"Could not connect to RS-485 DMX Interface, retrying in {humanize_naturaldelta(datetime_timedelta(milliseconds=self.__connection_delay))}... ")
+                    self.logger.warning(f"Could not connect to RS-485 DMX Interface, retrying in {humanize_naturaldelta(datetime_timedelta(milliseconds=self.__connection_delay))}... ")
 
                 time.sleep(self.__connection_delay/1000)
 
@@ -52,58 +56,65 @@ class DMXInterface():
     def connect(self):
         try: self.interface = DMX(num_of_channels=512)
         except ConnectionError as exec:
-            raise InterfaceFailedConnectionException()
+            self.logger.exception(
+                InterfaceFailedConnectionException())
            
     def __send_universe(self,data:list):
         try: assert type(data) == list
-        except AssertionError: 
-            raise InterfaceInvalidArgumentException(
-                "Universe data must be contained in a list structure.")
+        except AssertionError:
+            self.logger.exception(
+                InterfaceInvalidArgumentException("Universe data must be contained in a list structure."))
         
         try: assert data not in [[],None]
         except AssertionError:
-            raise InterfaceInvalidArgumentException(
-                "Universe must contain data")
+            self.logger.exception(
+                InterfaceInvalidArgumentException("Universe must contain data"))
         
         try: assert len(data) <= 512
         except AssertionError:
-            raise InterfaceInvalidArgumentException(
-                "Universe must not exceed 512 entries")
+            self.logger.exception(
+                InterfaceInvalidArgumentException("Universe must not exceed 512 entries"))
 
         try: assert self.connected == True
         except AssertionError:
-            raise InterfaceNotConnectedException()
+            self.logger.exception(
+                InterfaceNotConnectedException())
 
         for datum in enumerate(data):
             self.interface.set_data(datum[0],datum[1],auto_send=False)
 
         try: self.interface.send()
-        except SerialException: raise InterfaceDisconnectedException()
+        except SerialException: 
+            self.logger.exception(
+                InterfaceDisconnectedException())
 
     def __send_channel(self,channel_address:int,channel_content:int,auto_send=True):
         try: assert type(channel_address) == int
         except AssertionError:
-            raise InterfaceInvalidArgumentException(
-                "Channel address must be an integer")
+            self.logger.exception(
+                InterfaceInvalidArgumentException("Channel address must be an integer"))
         
         try: assert type(channel_content) == int
         except AssertionError:
-            raise InterfaceInvalidArgumentException(
-                "Channel content must be an integer")
+            self.logger.exception(
+                InterfaceInvalidArgumentException("Channel content must be an integer"))
         
         try: assert channel_address > 0 and channel_address <= 512
         except AssertionError:
-            raise InterfaceInvalidArgumentException(
-                "Channel address must be between 1 and 512")
+            self.logger.exception(
+                InterfaceInvalidArgumentException("Channel address must be between 1 and 512"))
         
         try: assert channel_content >=0 and channel_content <= 255
         except AssertionError:
-            raise InterfaceInvalidArgumentException(
-                "Channel content must be between 0 and 255")
+            self.logger.exception(
+                InterfaceInvalidArgumentException("Channel content must be between 0 and 255"))
 
         try: assert self.connected == True
         except AssertionError:
-            raise InterfaceNotConnectedException()
+            self.logger.exception(
+                InterfaceNotConnectedException())
 
         try: self.interface.set_data(channel_address,channel_content,auto_send=auto_send)
-        except SerialException as exec: raise InterfaceDisconnectedException()
+        except SerialException: 
+            self.logger.exception(
+                InterfaceDisconnectedException())
