@@ -7,6 +7,8 @@ from serial import SerialException
 
 import utils.settings as settings
 from utils.logger import initialize_logger
+from utils.interface import DMXInterface
+
 class DMXControl():
     
     def __init__(self):
@@ -24,34 +26,7 @@ class DMXControl():
 
         self.previouscontent = self.BLACK
 
-        self.connected = False
-
-        while True:
-
-            try:
-
-                if not self.connected:
-
-                    try: 
-                        self.connect()
-                        self.connected = True
-
-                        print("RS-485 DMX Interface connected")
-
-                    except Exception as e:
-
-                        print("Could not connect to RS-485 DMX Interface, retrying in 5 seconds... ")
-                        
-                        time.sleep(5)
-                        
-                        continue
-
-                self.update()
-        
-            except SerialException as e:
-            
-                print("RS-485 DMX Interface disconnected, attempting to reconnect...")
-                self.connected = False
+        self.interface = DMXInterface(self.logger)
 
     def connect(self):
         self.interface = DMX(num_of_channels=self.DMXVALUES)
