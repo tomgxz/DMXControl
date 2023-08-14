@@ -81,7 +81,7 @@ class DMXInterface():
                 InterfaceNotConnectedException())
 
         for datum in enumerate(data):
-            self.interface.set_data(datum[0],datum[1],auto_send=False)
+            self.interface.set_data(datum[0]+1,datum[1],auto_send=False)
 
         try: self.interface.send()
         except SerialException: 
