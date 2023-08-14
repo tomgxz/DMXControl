@@ -40,8 +40,8 @@ class InterfaceFailedConnectionException(InterfaceException):
         super().__init__(f"Could not connect to RS-485 DMX Interface.")
 
 class InterfaceAbortConnectionException(InterfaceException):
-    def __init__(self):
-        super().__init__(f"Could not connect to RS-485 DMX Interface.")
+    def __init__(self,message:str = ""):
+        super().__init__(f"Could not connect to RS-485 DMX Interface." if message == "" else message)
 
 class InterfaceDisconnectedException(InterfaceException):
     def __init__(self):
