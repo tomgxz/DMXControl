@@ -118,3 +118,6 @@ class DMXInterface():
         except SerialException: 
             self.logger.exception(
                 InterfaceDisconnectedException())
+
+    def send_universe(self,data:list):
+        return self.__send_universe(data)
