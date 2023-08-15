@@ -50,9 +50,9 @@ def screencap(
         previousOutput:np.ndarray=None,
         previousOutputDimensions:tuple[int]=(),
         pixelcount:int | list[int] = 1,
+        pixelreduce:int = 1,
         pixelcolorformat:list[str] = ["R","G","B"],
         fadefactor:int = 15,
-        colormono:int = 0,
         colorenhancement:float = 2,
         colordimming:float = 1
     ) -> tuple[np.ndarray,np.ndarray,tuple[int]]:
@@ -65,26 +65,36 @@ def screencap(
     sct_img = screencapture.grab({"top":270,"left":480,"width":960,"height":540})  
 
     dimensions:tuple[int] = (1,1)
+    usepixelreduce = False
 
-    if not colormono:
+    if type(pixelcount) == int:
+        if pixelcount < pixelreduce:
+            pixelreduce = pixelcount
 
-        if type(pixelcount) == int:
-            dimensions = (pixelcount,1)
+        usepixelreduce = pixelreduce > 1 and pixelcount % pixelreduce == 0
 
-        elif type(pixelcount) == list[int]:
-            
-            if len(pixelcount) > 2 or len(pixelcount) < 1:
-                raise Exception()
-            
-            elif len(pixelcount) == 2:
-                dimensions = tuple(pixelcount)
+        originaldimensions = (pixelcount,1)
 
-            elif len(pixelcount) == 1:
-                dimensions = (pixelcount[0],1)
+        if usepixelreduce:
+            outputpixelcount = pixelcount
+            pixelcount = int(pixelcount / pixelreduce)
 
-        else:
-            raise Exception() # abstract
+        dimensions = (pixelcount,1)
 
+    elif type(pixelcount) == list[int]:
+        
+        if len(pixelcount) > 2 or len(pixelcount) < 1:
+            raise Exception()
+        
+        elif len(pixelcount) == 2:
+            dimensions = tuple(pixelcount)
+
+        elif len(pixelcount) == 1:
+            dimensions = (pixelcount[0],1)
+
+    else:
+        raise Exception() # abstract
+    
     assert len(dimensions) == 2
 
     dmxvaluecount = pcflen
@@ -94,14 +104,15 @@ def screencap(
 
     img = Image.frombytes("RGB",(sct_img.width,sct_img.height),sct_img.rgb)
     if colorenhancement >= 0: img = ImageEnhance.Color(img).enhance(colorenhancement)
-    img = img.resize(dimensions,Image.ANTIALIAS)
-
-    img = np.array(img)[0]
-    output = img.copy()
 
     i=0
 
-    if not colormono: # if mono is false
+    if not usepixelreduce: # if no pixel reduction will take place
+
+        img = img.resize(dimensions,Image.ANTIALIAS)
+
+        img = np.array(img)[0]
+        output = img.copy()
 
         if dimensions[1] == 1: # if there is only one plane
 
@@ -151,9 +162,40 @@ def screencap(
 
                     if i >= dmxvaluecount: break
 
-    else: # if the image is mono
+    else: # if pixel reduction will be used
 
-        pass
+        originalimg = img.resize(originaldimensions,Image.ANTIALIAS)
+        img = img.resize(dimensions,Image.ANTIALIAS)
+
+        originalimg = np.array(originalimg)[0]
+        img = np.array(img)[0]
+
+        output = originalimg.copy()
+
+        for pixel in enumerate(img): # for pixel in image (where the image is 1 pixel high and a np.array)
+
+            for sub in enumerate(pixel[1]): # for part (of [r,g,b]) in pixel
+
+                color = pixelcolorformat[sub[0]]
+
+                prev = -1
+                if usePreviousOutput: prev = previousOutput[pixel[0]][sub[0]]
+
+                formatted = formatvalue(sub[1],color,prev=prev,fadefactor=fadefactor,colordimming=colordimming)
+
+                for i in range(pixelreduce):
+                    
+                    # set the value of the pixel in the image array so that it can be returned
+                    originalimg[pixel[0]+i][sub[0]] = formatted[0]
+
+                    # set the value in the output, to be sent to the interface
+                    output[pixel[0]+i][sub[0]] = formatted[1]
+
+                if i >= dmxvaluecount: break
+
+            if i >= dmxvaluecount: break
+
+        img = originalimg
 
     # return for fade functionality
     return (output,img,dimensions)
