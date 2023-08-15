@@ -1,5 +1,5 @@
 if __name__ == "__main__":
-    from exceptions import ModuleRunError
+    from ..utils.exceptions import ModuleRunError
     raise ModuleRunError()
 
 # The amount of pixels to output to
@@ -15,14 +15,10 @@ PIXEL_REDUCE = 1
 FADE_FACTOR = 15
 
 # The brightness factor of the output
-DIMMED = 1
+GLOBAL_DIMMING = 1
 
 # The DMX address format for each pixel
 COLOR_FORMAT = ["R","G","B"]
-
-# Whether or not the output all one color, or many colors
-# Deprecated, replaced by PIXEL_REDUCE
-COLOR_MONO = 0
 
 # How much to enhance the image, 1 preserves its original state
 COLOR_ENHANCE = 2

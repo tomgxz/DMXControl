@@ -5,8 +5,8 @@ from mss import mss
 from PIL import Image,ImageEnhance
 from serial import SerialException
 
-import utils.settings as settings
 from utils.logger import initialize_logger
+import data.default_settings as settings
 from utils.interface import DMXInterface
 
 class DMXControl():

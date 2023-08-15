@@ -8,7 +8,7 @@ from datetime import timedelta as datetime_timedelta
 from humanize import naturaldelta as humanize_naturaldelta
 import time
 
-import utils.settings as settings
+import data.default_settings as default_settings
 from utils.exceptions import InterfaceFailedConnectionException,InterfaceInvalidArgumentException,InterfaceNotConnectedException,InterfaceDisconnectedException,InterfaceAbortConnectionException
 from utils.logger import Logger as DMXLogger
 
@@ -20,9 +20,9 @@ class DMXInterface():
         self.logger = logger
 
         self.connected = False
-        self.__connection_timeout = settings.INTERFACE_CONNECTION_TIMEOUT
+        self.__connection_timeout = default_settings.INTERFACE_CONNECTION_TIMEOUT
         self.__connection_attempts = 0
-        self.__connection_delay = settings.INTERFACE_CONNECTION_DELAY
+        self.__connection_delay = default_settings.INTERFACE_CONNECTION_DELAY
 
         self.__connection_attempt_validation = lambda: self.__connection_timeout > self.__connection_attempts
         if self.__connection_timeout == -1: self.__connection_attempt_validation = lambda: True
