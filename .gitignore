@@ -3,6 +3,7 @@ replit.nix
 .vscode
 session.txt
 Qt
+qml
 
 ### Django ###
 *.log
