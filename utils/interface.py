@@ -121,3 +121,6 @@ class DMXInterface():
 
     def send_universe(self,data:list):
         return self.__send_universe(data)
+    
+    def send_channel(self,address,content,auto_send=True):
+        return self.__send_channel(address,content,auto_send=auto_send)
