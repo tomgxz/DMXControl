@@ -15,7 +15,7 @@ class LoggerExceptionHandlingError(LoggerException):
     """ Common base class for all Logger exception """
 
     def __init__(self):
-        message = f"An exception occured during the handling of another Logger exception."
+        message = "An exception occured during the handling of another Logger exception."
         super().__init__(message)
 
 class LoggerFileNotFoundError(LoggerException):
@@ -37,19 +37,19 @@ class InterfaceException(Exception):
 
 class InterfaceFailedConnectionException(InterfaceException):
     def __init__(self):
-        super().__init__(f"Could not connect to RS-485 DMX Interface.")
+        super().__init__("Could not connect to RS-485 DMX Interface.")
 
 class InterfaceAbortConnectionException(InterfaceException):
     def __init__(self,message:str = ""):
-        super().__init__(f"Could not connect to RS-485 DMX Interface." if message == "" else message)
+        super().__init__("Could not connect to RS-485 DMX Interface." if message == "" else message)
 
 class InterfaceDisconnectedException(InterfaceException):
     def __init__(self):
-        super().__init__(f"RS-485 DMX Interface disconnected.")
+        super().__init__("RS-485 DMX Interface disconnected.")
 
 class InterfaceNotConnectedException(InterfaceException):
     def __init__(self):
-        super().__init__(f"Interface must be connected to send data.")
+        super().__init__("Interface must be connected to send data.")
 
 class InterfaceInvalidArgumentException(InterfaceException):
     def __init__(self, message):
