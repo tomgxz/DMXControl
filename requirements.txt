@@ -3,5 +3,4 @@ humanize==4.6.0
 mss==7.0.1
 numpy==1.22.2
 Pillow==9.0.1
-PyQt5==5.15.9
 pyserial==3.5
