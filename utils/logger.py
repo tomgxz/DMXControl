@@ -2,8 +2,9 @@ if __name__ == "__main__":
     from exceptions import ModuleRunError
     raise ModuleRunError()
 
-from utils.exceptions import LoggerFileNotFoundError
 import os,logging,sys
+
+from utils.exceptions import LoggerFileNotFoundError
 
 class Logger():
     """ Logging system for DMXControl """

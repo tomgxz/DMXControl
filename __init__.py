@@ -1,13 +1,8 @@
-from dmx import DMX
 import numpy as np
-import math,time
-from mss import mss
-from PIL import Image,ImageEnhance
-from serial import SerialException
 
-from utils.logger import initialize_logger
 import data.default_settings as settings
 from utils.interface import DMXInterface
+from utils.logger import initialize_logger
 
 class DMXControl():
     
