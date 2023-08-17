@@ -5,13 +5,23 @@ if __name__ == "__main__":
 from tkinter import Tk,Label,Frame,Scale
 from tkinter.font import Font
 
-from utils.logger import Logger
+from utils.logger import DMXLogger
 from utils.settingshandler import DMXSettingsHandler
 
 class DMXUserInterface():
-    def __init__(self,logger:Logger,settingshandler:DMXSettingsHandler):
+    """ User interface handler for DMXControl """
 
-        assert type(logger) == Logger
+    def __init__(self,logger:DMXLogger,settingshandler:DMXSettingsHandler):
+        """ Constructs a :class: `DMXUserInterface <DMXUserInterface>` 
+        
+        :param logger: `DMXLogger` used by main application
+        :type  logger: `DMXLogger <DMXLogger>`
+
+        :param settingshandler: `DMXSettingsHandler` used by main application
+        :type  settingshandler: `DMXSettingsHandler <DMXSettingsHandler>`
+        """
+
+        assert type(logger) == DMXLogger
         assert type(settingshandler) == DMXSettingsHandler
 
         self.__logger = logger
@@ -25,6 +35,8 @@ class DMXUserInterface():
         self.root.protocol("WM_DELETE_WINDOW", self.__tk_on_close)
 
     def __initialize_tk(self):
+        """ Initializes the tkinter application """
+
         self.root = Tk()
         
         self.__colors = {
@@ -100,13 +112,16 @@ class DMXUserInterface():
 
         self.root.configure(bg=self.__bgcolor)
 
-
     def __tk_on_close(self):
+        """ Procedure to run when the tkinter application is closed """
+
         self.root.destroy()
         self.__settings.enable_kill_output()
         self.__logger.info("Application closed, terminating program...")
         
     def __main_screen(self):
+        """ Construct the main screen for the tkinter application """
+
         title = self.__tk_create_title()
 
         main = Frame(self.root,bg=self.__bgcolor)
@@ -211,7 +226,13 @@ class DMXUserInterface():
         
         """
 
-    def __tk_create_title(self):
+    def __tk_create_title(self) -> Label:
+        """ Create the title widget for the tkinter application
+
+        :returns: The title widget
+        :rtype: Label
+        """
+
         title=Label(self.root,text="DMX Controller",font=self.__title_font,fg=self.__colors["primary"]["normal"],bg=self.__bgcolor)
         title.pack()
         return title

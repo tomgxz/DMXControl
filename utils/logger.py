@@ -6,27 +6,24 @@ import os,logging,sys
 
 from utils.exceptions import LoggerFileNotFoundError
 
-class Logger():
+class DMXLogger():
     """ Logging system for DMXControl """
     
-    def __init__(self,sessionFile:str="",logFile:str="",formatting:str="[%(asctime)s.%(msecs)03d] [%(levelname)s]: %(message)s",dateTime:str="%m-%d-%Y %H:%M:%S",*a,**k):
-        """
-        Constructs a :class: 'Logger <Logger>'
+    def __init__(self,sessionFile:str="",logFile:str="",formatting:str="[%(asctime)s.%(msecs)03d] [%(levelname)s]: %(message)s",dateTime:str="%m-%d-%Y %H:%M:%S"):
+        """ Constructs a :class: `DMXLogger <DMXLogger>`
 
-        :param sessionFile str:
-            (Optional, "") String containing location (path) of the session file used by the main code. Will throw an exception if left empty
-        :param logFile str:
-            (Optional, "") String containing location (path) of the log file used by the main code. Will throw an exception if left empty
-        :param formatting str:
-            (Optional, "[%(asctime)s] [%(levelname)s]: %(message)s") String defining the formatting to be used by the logger. Follows the logger module's rules for how it is formatted
-        :param dateTime str:
-            (Optional, "%m-%d-%Y %H:%M:%S") String defining the formatting of dates and times used by the logger. Follows the logging module's rules for how it is formatted
-        :param a list:
-            Other arguments passed
-        :param k dict:
-            Other keyword arguments passed
-        """
+        :param sessionFile: (Optional, "") String containing location (path) of the session file used by the main code. Will throw an exception if left empty
+        :type  sessionFile: str
         
+        :param logFile: (Optional, "") String containing location (path) of the log file used by the main code. Will throw an exception if left empty
+        :type  logFile: str
+        
+        :param formatting: (Optional, "[%(asctime)s] [%(levelname)s]: %(message)s") String defining the formatting to be used by the logger. Follows the logger module's rules for how it is formatted
+        :type  formatting: str
+        
+        :param dateTime: (Optional, "%m-%d-%Y %H:%M:%S") String defining the formatting of dates and times used by the logger. Follows the logging module's rules for how it is formatted
+        :type  dateTime: str
+        """
         
         self.os=os
         self.logging=logging
@@ -61,8 +58,9 @@ class Logger():
         self.logger.addHandler(self.loggingFileHandler)
         self.logger.addHandler(self.loggingStdoutHandler)
 
-    def clearLog(self,*a,**k):
+    def clearLog(self):
         """ Clears the log file """
+
         assert os.path.exists(self.logFile)
         open(self.logFile,"w").close()
 
@@ -70,12 +68,14 @@ class Logger():
         """
         Logs a message with level LOG
 
-        :param msg str:
-            The message to be logged
-        :param a list:
-            Any other paramaters to be passed to the logger
-        :param k dict:
-            Any other keyword arguments to be passed to the logger
+        :param msg: The message to be logged
+        :type  msg: str
+        
+        :param a: Other arguments passed
+        :type  k: list[Any]
+        
+        :param k: Other keyword arguments passed
+        :type  k: dict[str,Any]
         """
         
         self.logger.log(msg,*a,*k)
@@ -84,12 +84,14 @@ class Logger():
         """
         Logs a message with level DEBUG
 
-        :param msg str:
-            The message to be logged
-        :param a list:
-            Any other paramaters to be passed to the logger
-        :param k dict:
-            Any other keyword arguments to be passed to the logger
+        :param msg: The message to be logged
+        :type  msg: str
+        
+        :param a: Other arguments passed
+        :type  k: list[Any]
+        
+        :param k: Other keyword arguments passed
+        :type  k: dict[str,Any]
         """
         self.logger.debug(msg,*a,*k)
 
@@ -97,12 +99,14 @@ class Logger():
         """
         Logs a message with level INFO
 
-        :param msg str:
-            The message to be logged
-        :param a list:
-            Any other paramaters to be passed to the logger
-        :param k dict:
-            Any other keyword arguments to be passed to the logger
+        :param msg: The message to be logged
+        :type  msg: str
+        
+        :param a: Other arguments passed
+        :type  k: list[Any]
+        
+        :param k: Other keyword arguments passed
+        :type  k: dict[str,Any]
         """
         self.logger.info(msg,*a,*k)
 
@@ -110,12 +114,14 @@ class Logger():
         """
         Logs a message with level WARNING
 
-        :param msg str:
-            The message to be logged
-        :param a list:
-            Any other paramaters to be passed to the logger
-        :param k dict:
-            Any other keyword arguments to be passed to the logger
+        :param msg: The message to be logged
+        :type  msg: str
+        
+        :param a: Other arguments passed
+        :type  k: list[Any]
+        
+        :param k: Other keyword arguments passed
+        :type  k: dict[str,Any]
         """
         self.logger.warning(msg,*a,*k)
     
@@ -123,12 +129,14 @@ class Logger():
         """
         Logs a message with level ERROR
 
-        :param msg str:
-            The message to be logged
-        :param a list:
-            Any other paramaters to be passed to the logger
-        :param k dict:
-            Any other keyword arguments to be passed to the logger
+        :param msg: The message to be logged
+        :type  msg: str
+        
+        :param a: Other arguments passed
+        :type  k: list[Any]
+        
+        :param k: Other keyword arguments passed
+        :type  k: dict[str,Any]
         """
         self.logger.error(msg,*a,*k)
 
@@ -136,12 +144,14 @@ class Logger():
         """
         Logs a message with level CRITICAL
 
-        :param msg str:
-            The message to be logged
-        :param a list:
-            Any other paramaters to be passed to the logger
-        :param k dict:
-            Any other keyword arguments to be passed to the logger
+        :param msg: The message to be logged
+        :type  msg: str
+        
+        :param a: Other arguments passed
+        :type  k: list[Any]
+        
+        :param k: Other keyword arguments passed
+        :type  k: dict[str,Any]
         """
         self.logger.critical(msg,*a,*k)
 
@@ -149,21 +159,22 @@ class Logger():
         """
         Logs a message with level EXCEPTION
 
-        :param msg str:
-            The message to be logged
-        :param a list:
-            Any other paramaters to be passed to the logger
-        :param k dict:
-            Any other keyword arguments to be passed to the logger
+        :param msg: The message to be logged
+        :type  msg: str
+        
+        :param a: Other arguments passed
+        :type  k: list[Any]
+        
+        :param k: Other keyword arguments passed
+        :type  k: dict[str,Any]
         """
         self.logger.exception(msg,*a,*k)
 
 def initialize_logger(sessionfile,logfile):
-    """
-    Initialises the logger and resets the log and session file
+    """ Initialises the logger and resets the log and session file
 
-    :returns: The Logger object
-    :rtype: Logger
+    :returns: The DMXLogger object
+    :rtype: `DMXLogger <DMXLogger>`
     """
 
     commands=[] # used to store log commands before the log has been generated, so that they can be appended
@@ -219,7 +230,7 @@ def initialize_logger(sessionfile,logfile):
         open(logfile,"w").close()
         open(sessionfile,"w").close()
 
-    logger=Logger(sessionFile=sessionfile,logFile=logfile) # generate the logger
+    logger=DMXLogger(sessionFile=sessionfile,logFile=logfile) # generate the logger
 
     for command in commands: command()
 

@@ -10,11 +10,18 @@ import time
 
 import data.default_settings as default_settings
 from utils.exceptions import InterfaceFailedConnectionException,InterfaceInvalidArgumentException,InterfaceNotConnectedException,InterfaceDisconnectedException,InterfaceAbortConnectionException
-from utils.logger import Logger as DMXLogger
+from utils.logger import DMXLogger as DMXLogger
 
 class DMXInterface():
+    """ RS-485 interface handler for DMXControl """
     
     def __init__(self,logger:DMXLogger):
+        """ Constructs a :class: `DMXInterface <DMXInterface>`
+        
+        :param logger: `DMXLogger` used by main application
+        :type  logger: `DMXLogger <DMXLogger>`
+        """
+
         assert type(logger) == DMXLogger
 
         self.logger = logger
@@ -46,7 +53,13 @@ class DMXInterface():
 
                 time.sleep(self.__connection_delay/1000)
 
-    def __attempt_connection(self):
+    def __attempt_connection(self) -> bool:
+        """ Attempt to connect to the RS-485 DMX interface
+        
+        :returns: Whether or not the connection was successful
+        :rtype: bool
+        """
+
         try: 
             self.connect()
             return True
@@ -54,12 +67,20 @@ class DMXInterface():
             return False
      
     def connect(self):
+        """ Attempt to connect to the RS-485 DMX interface """
+
         try: self.interface = DMX(num_of_channels=512)
         except ConnectionError as exec:
             self.logger.exception(
                 InterfaceFailedConnectionException())
            
-    def __send_universe(self,data:list):
+    def __send_universe(self,data:list[int]) -> None:
+        """ Sends a universe of data to the RS-485 DMX interface
+
+        :param data: The data to send to the RS-485 DMX interface
+        :type  data: list[int]
+        """
+
         try: assert type(data) == list
         except AssertionError:
             self.logger.exception(
@@ -88,7 +109,19 @@ class DMXInterface():
             self.logger.exception(
                 InterfaceDisconnectedException())
 
-    def __send_channel(self,channel_address:int,channel_content:int,auto_send=True):
+    def __send_channel(self,channel_address:int,channel_content:int,auto_send:bool=True) -> None:
+        """ Sends a channel of data to the RS-485 DMX interface
+
+        :param channel_address: The address of the channel to send the data to
+        :type  channel_address: int
+
+        :param channel_content: The content to send to the RS-485 DMX interface
+        :type  channel_address: int
+
+        :param auto_send: (Optional, `True`) Whether or not to send the data or withold it until `self.interface.send()` is called
+        :type  auto_send: bool
+        """
+
         try: assert type(channel_address) == int
         except AssertionError:
             self.logger.exception(
@@ -119,8 +152,26 @@ class DMXInterface():
             self.logger.exception(
                 InterfaceDisconnectedException())
 
-    def send_universe(self,data:list):
+    def send_universe(self,data:list) -> None:
+        """ Sends a universe of data to the RS-485 DMX interface
+
+        :param data: The data to send to the RS-485 DMX interface
+        :type  data: list[int]
+        """
+
         return self.__send_universe(data)
     
-    def send_channel(self,address,content,auto_send=True):
+    def send_channel(self,address,content,auto_send=True) -> None:
+        """ Sends a channel of data to the RS-485 DMX interface
+
+        :param channel_address: The address of the channel to send the data to
+        :type  channel_address: int
+
+        :param channel_content: The content to send to the RS-485 DMX interface
+        :type  channel_address: int
+
+        :param auto_send: (Optional, `true`) Whether or not to send the data or withold it until `self.interface.send()` is called
+        :type  auto_send: bool
+        """
+
         return self.__send_channel(address,content,auto_send=auto_send)
