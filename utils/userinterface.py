@@ -5,6 +5,7 @@ if __name__ == "__main__":
 from tkinter import Tk,Label,Frame,Scale
 from tkinter.font import Font
 
+from data import strings
 from utils.logger import DMXLogger
 from utils.settingshandler import DMXSettingsHandler
 
@@ -117,7 +118,7 @@ class DMXUserInterface():
 
         self.root.destroy()
         self.__settings.enable_kill_output()
-        self.__logger.info("Application closed, terminating program...")
+        self.__logger.info(strings.UI_APPLICATION_CLOSED)
         
     def __main_screen(self):
         """ Construct the main screen for the tkinter application """
@@ -143,7 +144,7 @@ class DMXUserInterface():
         optionframe_globaldimming = Frame(options,bg=self.__bgcolor)
         optionframe_globaldimming.grid(row=1,column=0)
 
-        optionlabel_globaldimming = Label(optionframe_globaldimming,bg=self.__bgcolor,text="Global Dimming")
+        optionlabel_globaldimming = Label(optionframe_globaldimming,bg=self.__bgcolor,text=strings.UI_OPTION_GLOBALDIMMING_LABEL)
         optionlabel_globaldimming.pack(side="left")
 
         optionslider_globaldimming = Scale(optionframe_globaldimming,bg=self.__bgcolor,borderwidth=0,from_=0,to=1,orient="horizontal",resolution=0.01)
@@ -160,7 +161,7 @@ class DMXUserInterface():
         optionframe_pixelcount = Frame(options,bg=self.__bgcolor)
         optionframe_pixelcount.grid(row=2,column=0)
 
-        optionlabel_pixelcount = Label(optionframe_pixelcount,bg=self.__bgcolor,text="Pixel Count")
+        optionlabel_pixelcount = Label(optionframe_pixelcount,bg=self.__bgcolor,text=strings.UI_OPTION_PIXELCOUNT_LABEL)
         optionlabel_pixelcount.pack(side="left")
 
         optionslider_pixelcount = Scale(optionframe_pixelcount,bg=self.__bgcolor,borderwidth=0,from_=1,to=16,orient="horizontal",resolution=1)
@@ -177,7 +178,7 @@ class DMXUserInterface():
         optionframe_pixelreduce = Frame(options,bg=self.__bgcolor)
         optionframe_pixelreduce.grid(row=3,column=0)
 
-        optionlabel_pixelreduce = Label(optionframe_pixelreduce,bg=self.__bgcolor,text="Pixel Reduce")
+        optionlabel_pixelreduce = Label(optionframe_pixelreduce,bg=self.__bgcolor,text=strings.UI_OPTION_PIXELREDUCE_LABEL)
         optionlabel_pixelreduce.pack(side="left")
 
         optionslider_pixelreduce = Scale(optionframe_pixelreduce,bg=self.__bgcolor,borderwidth=0,from_=1,to=16,orient="horizontal",resolution=1)
@@ -194,7 +195,7 @@ class DMXUserInterface():
         optionframe_colorenhance = Frame(options,bg=self.__bgcolor)
         optionframe_colorenhance.grid(row=4,column=0)
 
-        optionlabel_colorenhance = Label(optionframe_colorenhance,bg=self.__bgcolor,text="Color Enhance")
+        optionlabel_colorenhance = Label(optionframe_colorenhance,bg=self.__bgcolor,text=strings.UI_OPTION_COLORENHANCE_LABEL)
         optionlabel_colorenhance.pack(side="left")
 
         optionslider_colorenhance = Scale(optionframe_colorenhance,bg=self.__bgcolor,borderwidth=0,from_=1,to=5,orient="horizontal",resolution=0.1)
@@ -233,6 +234,6 @@ class DMXUserInterface():
         :rtype: Label
         """
 
-        title=Label(self.root,text="DMX Controller",font=self.__title_font,fg=self.__colors["primary"]["normal"],bg=self.__bgcolor)
+        title=Label(self.root,text=strings.UI_TITLE_CONTENT,font=self.__title_font,fg=self.__colors["primary"]["normal"],bg=self.__bgcolor)
         title.pack()
         return title

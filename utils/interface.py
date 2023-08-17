@@ -8,7 +8,7 @@ from datetime import timedelta as datetime_timedelta
 from humanize import naturaldelta as humanize_naturaldelta
 import time
 
-import data.default_settings as default_settings
+from data import default_settings, strings
 from utils.exceptions import InterfaceFailedConnectionException,InterfaceInvalidArgumentException,InterfaceNotConnectedException,InterfaceDisconnectedException,InterfaceAbortConnectionException
 from utils.logger import DMXLogger as DMXLogger
 
@@ -40,16 +40,16 @@ class DMXInterface():
                 self.connected = True
                 self.__connection_attempts = 0
 
-                self.logger.info("Connected to RS-485 DMX Interface.")
+                self.logger.info(strings.INTERFACE_CONNECTED)
 
             else:
                 self.__connection_attempts += 1
 
                 if not self.__connection_attempt_validation():
                     self.logger.exception(
-                        InterfaceAbortConnectionException(f"Could not connect to RS-485 DMX Interface after {self.__connection_attempts} attempts, aborting..."))
+                        InterfaceAbortConnectionException(strings.INTERFACE_ABORT_CONNECTION_DETAIL.format(self.__connection_attempts)))
                 else:
-                    self.logger.warning(f"Could not connect to RS-485 DMX Interface, retrying in {humanize_naturaldelta(datetime_timedelta(milliseconds=self.__connection_delay))}... ")
+                    self.logger.warning(strings.INTERFACE_FAILED_CONNECTION_DETAIL.format(humanize_naturaldelta(datetime_timedelta(milliseconds=self.__connection_delay))))
 
                 time.sleep(self.__connection_delay/1000)
 
@@ -84,17 +84,17 @@ class DMXInterface():
         try: assert type(data) == list
         except AssertionError:
             self.logger.exception(
-                InterfaceInvalidArgumentException("Universe data must be contained in a list structure."))
+                InterfaceInvalidArgumentException(strings.INTERFACE_UNIVERSE_MUSTBELIST))
         
         try: assert data not in [[],None]
         except AssertionError:
             self.logger.exception(
-                InterfaceInvalidArgumentException("Universe must contain data"))
+                InterfaceInvalidArgumentException(strings.INTERFACE_UNIVERSE_MUSTHAVEDATA))
         
         try: assert len(data) <= 512
         except AssertionError:
             self.logger.exception(
-                InterfaceInvalidArgumentException("Universe must not exceed 512 entries"))
+                InterfaceInvalidArgumentException(strings.INTERFACE_UNIVERSE_MAX512))
 
         try: assert self.connected == True
         except AssertionError:
@@ -125,22 +125,22 @@ class DMXInterface():
         try: assert type(channel_address) == int
         except AssertionError:
             self.logger.exception(
-                InterfaceInvalidArgumentException("Channel address must be an integer"))
+                InterfaceInvalidArgumentException(strings.INTERFACE_CHANNEL_ADDRESSMUSTBEINT))
         
         try: assert type(channel_content) == int
         except AssertionError:
             self.logger.exception(
-                InterfaceInvalidArgumentException("Channel content must be an integer"))
+                InterfaceInvalidArgumentException(strings.INTERFACE_CHANNEL_CONTENTMUSTBEINT))
         
         try: assert channel_address > 0 and channel_address <= 512
         except AssertionError:
             self.logger.exception(
-                InterfaceInvalidArgumentException("Channel address must be between 1 and 512"))
+                InterfaceInvalidArgumentException(strings.INTERFACE_CHANNEL_ADDRESSCONSTRAINT))
         
         try: assert channel_content >=0 and channel_content <= 255
         except AssertionError:
             self.logger.exception(
-                InterfaceInvalidArgumentException("Channel content must be between 0 and 255"))
+                InterfaceInvalidArgumentException(strings.INTERFACE_CHANNEL_CONTENTCONSTRAINT))
 
         try: assert self.connected == True
         except AssertionError:

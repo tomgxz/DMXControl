@@ -4,6 +4,7 @@ if __name__ == "__main__":
 
 import os,logging,sys
 
+from data import strings
 from utils.exceptions import LoggerFileNotFoundError
 
 class DMXLogger():
@@ -183,7 +184,7 @@ def initialize_logger(sessionfile,logfile):
         with open(sessionfile,"r") as f:
             lines=f.read()
             if lines == "": # if there are no lines in the file
-                commands.append(lambda:logger.warning("Session file is empty"))
+                commands.append(lambda:logger.warning(strings.LOGGER_SESSION_EMPTY))
                 previousSessionData={}
             else:
                 previousSessionData={line.split(":")[0]:line.split(":")[1] for line in [x.strip("\n") for x in lines.split("\n")]}
@@ -195,7 +196,7 @@ def initialize_logger(sessionfile,logfile):
         try:
             logFileName=f"data/log/{previousSessionData['datecreated']}-%.log"
         except KeyError as e: # no attribute found in the session data
-            commands.append(lambda:logger.warning("No date created attribute in session file - previous log file will be deleted"))
+            commands.append(lambda:logger.warning(strings.LOGGER_SESSION_NODATE))
         else:
             while True:
                 if os.path.exists(logFileName.replace("%",str(logFileInt))):
@@ -210,21 +211,21 @@ def initialize_logger(sessionfile,logfile):
         open(logfile,"w").close() # clear file
 
     elif os.path.exists(sessionfile) and not(os.path.exists(logfile)): # if latest.log doesnt exist
-        commands.append(lambda:logger.warning("Previous log file does not exist"))
+        commands.append(lambda:logger.warning(strings.LOGGER_PREVLOG_NOFILE))
         if not os.path.exists("data/log/"):
             os.makedirs("data/log/")
         open(logfile,"w").close()
 
     elif (not os.path.exists(sessionfile)) and (not os.path.exists(logfile)): # if neither exists
-        commands.append(lambda:logger.warning("Previous log file does not exist"))
-        commands.append(lambda:logger.warning("Session file does not exist"))
+        commands.append(lambda:logger.warning(strings.LOGGER_PREVLOG_NOFILE))
+        commands.append(lambda:logger.warning(strings.LOGGER_SESSION_NOFILE))
 
         # clear both files
         open(logfile,"w").close()
         open(sessionfile,"w").close()
 
     else: # anything else
-        commands.append(lambda:logger.warning("Session file does not exist"))
+        commands.append(lambda:logger.warning(strings.LOGGER_SESSION_NOFILE))
 
         # clear both files
         open(logfile,"w").close()
@@ -234,6 +235,6 @@ def initialize_logger(sessionfile,logfile):
 
     for command in commands: command()
 
-    logger.info("Logging initialised")
+    logger.info(strings.LOGGER_INITIALISED)
 
     return logger

@@ -1,6 +1,6 @@
 {
     "name": "dmxcontrol",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "description": "Python-based DMX interface controller, primarily used for emulating monitor displays.",
     "author": "Tom_gxz",
     "license": "GNU GPL-3.0"
