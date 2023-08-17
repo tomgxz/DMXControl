@@ -1,4 +1,4 @@
-from ..data import strings
+from data import strings
 
 class ModuleRunError(Exception):
     def __init__(self):
