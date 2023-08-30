@@ -10,7 +10,7 @@ from utils.exceptions import LoggerFileNotFoundError
 class DMXLogger():
     """ Logging system for DMXControl """
     
-    def __init__(self,sessionFile:str="",logFile:str="",formatting:str="[%(asctime)s.%(msecs)03d] [%(levelname)s]: %(message)s",dateTime:str="%m-%d-%Y %H:%M:%S"):
+    def __init__(self,sessionFile:str="",logFile:str="",formatting:str="[%(asctime)s.%(msecs)03d] [%(levelname)s]: %(message)s",dateTime:str="%m-%d-%Y %H:%M:%S",logToConsole=True):
         """ Constructs a :class: `DMXLogger <DMXLogger>`
 
         :param sessionFile: (Optional, "") String containing location (path) of the session file used by the main code. Will throw an exception if left empty
@@ -51,6 +51,8 @@ class DMXLogger():
         self.loggingStdoutHandler=logging.StreamHandler(self.sys.stdout)
         self.loggingStdoutHandler.setLevel(logging.DEBUG)
         self.loggingStdoutHandler.setFormatter(self.loggingFormatter)
+
+        if not logToConsole: self.loggingStdoutHandler.setLevel(logging.ERROR)
 
         self.loggingFileHandler=logging.FileHandler(self.logFile)
         self.loggingFileHandler.setLevel(logging.DEBUG)
@@ -171,7 +173,7 @@ class DMXLogger():
         """
         self.logger.exception(msg,*a,*k)
 
-def initialize_logger(sessionfile,logfile):
+def initialize_logger(sessionfile,logfile,logToConsole=True):
     """ Initialises the logger and resets the log and session file
 
     :returns: The DMXLogger object
@@ -231,7 +233,7 @@ def initialize_logger(sessionfile,logfile):
         open(logfile,"w").close()
         open(sessionfile,"w").close()
 
-    logger=DMXLogger(sessionFile=sessionfile,logFile=logfile) # generate the logger
+    logger=DMXLogger(sessionFile=sessionfile,logFile=logfile,logToConsole=logToConsole) # generate the logger
 
     for command in commands: command()
 
