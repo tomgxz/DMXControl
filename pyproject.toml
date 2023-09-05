@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "DMXControl"
+version = "0.1.0"
+description = "My Portfolio"
+authors = ["tomgxz <tomgxz.dev@gmail.com>"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+repository = "https://github.com/Tomgxz/DMXControl"
+keywords = ["python","dmx","dmx-interface"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+dmx = "^0.2.1"
+humanize = "^4.6.0"
+mss = "^7.0.1"
+numpy = "^1.22.2"
+pillow = "^9.4.0"
+pyserial = "^3.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
