@@ -1,4 +1,4 @@
-dmx==0.2.1
+dmx==1.0
 humanize==4.6.0
 mss==7.0.1
 numpy==1.22.2
