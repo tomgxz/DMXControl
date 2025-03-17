@@ -12,7 +12,7 @@ PIXEL_COUNT = 16
 PIXEL_REDUCE = 1
 
 # The factor with which fade time is calculated
-FADE_FACTOR = 15
+FADE_FACTOR = 8
 
 # The brightness factor of the output
 GLOBAL_DIMMING = 1

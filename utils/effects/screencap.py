@@ -1,5 +1,5 @@
 from mss import mss
-from PIL import Image,ImageEnhance
+from PIL import Image,ImageEnhance,ImageFilter
 
 import numpy as np
 
@@ -46,6 +46,7 @@ def colorfunction(x:int,color:str="R",dimming:float=1) -> int:
     """
 
     assert color in list(colormap.keys())
+    if x < 24: return 0
     return ((x/510)**2)*1020*colormap[color]*dimming # TODO: round value
 
 def formatvalue(
@@ -101,6 +102,7 @@ def screencap(
         pixelreduce:int = 1,
         pixelcolorformat:list[str] = ["R","G","B"],
         fadefactor:int = 15,
+        imageblend:bool = True,
         colorenhancement:float = 2,
         colordimming:float = 1
     ) -> tuple[np.ndarray,np.ndarray,tuple[int]]:
@@ -120,6 +122,9 @@ def screencap(
 
     :param fadefactor: (Optional, `15`) The fade factor used when fading between values
     :type  fadefactor: int
+
+    :param imageblend: (Optional, True) Boolean determining whether the output will be blurred
+    :type  imageblend: bool
 
     :param colorenhancement: (Optional, `2`) The color enhancement value to apply to the image
     :type  colorenhancement: float
@@ -176,8 +181,9 @@ def screencap(
 
     usePreviousOutput = dimensions == previousOutputDimensions
 
-    img = Image.frombytes("RGB",(sct_img.width,sct_img.height),sct_img.rgb)
+    img = Image.frombytes("RGB",(sct_img.width,sct_img.height),sct_img.rgb).transpose(Image.FLIP_LEFT_RIGHT)
     if colorenhancement >= 0: img = ImageEnhance.Color(img).enhance(colorenhancement)
+    if imageblend: img = img.filter(ImageFilter.GaussianBlur)
 
     i=0
 

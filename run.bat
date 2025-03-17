@@ -1,1 +1,1 @@
-python run.py dmxcontrol -ng -l
+python -m run dmxcontrol -ng -l
